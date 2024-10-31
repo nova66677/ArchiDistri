@@ -2,30 +2,20 @@ const si = require('systeminformation');
 
 async function getSystemInformation() {
   try {
-    const cpu = await si.cpu();
-    const system = await si.system();
-    const mem = await si.mem();
-    const os = await si.osInfo();
-    const currentLoad = await si.currentLoad();
-    const processes = await si.processes();
-    const diskLayout = await si.diskLayout();
-    const networkInterfaces = await si.networkInterfaces();
-
-    const systemInformation = {
-      cpu,
-      system,
-      mem,
-      os,
-      currentLoad,
-      processes,
-      diskLayout,
-      networkInterfaces,
-    };
-
-    return systemInformation; 
+    const [cpu, system, mem, osInfo, currentLoad, processes, diskLayout, networkInterfaces] = await Promise.all([
+      si.cpu(),
+      si.system(),
+      si.mem(),
+      si.osInfo(),
+      si.currentLoad(),
+      si.processes(),
+      si.diskLayout(),
+      si.networkInterfaces(),
+    ]);
+    return { cpu, system, mem, os: osInfo, currentLoad, processes, diskLayout, networkInterfaces };
   } catch (err) {
-    console.error('404', err);
-    throw new Error('404'); // Custom error message
+    console.error('Error: ', err.message); // Only log the error message for clarity
+    throw new Error('404'); // Ensure this message aligns with your test
   }
 }
 

@@ -74,10 +74,16 @@ describe('getSystemInformation', () => {
     });
   });
 
-  it('Erreurs handler', async () => {
- 
+  it('Error handler', async () => {
+    // Suppress console.error output
+    const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
+  
+    // Mock the system information to throw an error
     si.cpu.mockRejectedValue(new Error('404'));
-
+  
     await expect(getSystemInformation()).rejects.toThrow('404');
+  
+    // Restore console.error after the test
+    consoleErrorMock.mockRestore();
   });
 });
